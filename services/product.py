@@ -37,15 +37,27 @@ class ProductService():
         self.db.commit()
         return
     
+
+    
     def update_producto(self, id: int, data: Producto):
         producto = self.db.query(ProductoModel).filter(ProductoModel.id == id)
 
-        producto_dict = data.dict()
-        producto_dict['id'] = id
+        # filtrando los datos para excluir los valores None
+        update_data = {k: v for k,v in data.dict().items() if v is not None}
 
-        producto.update(producto_dict, synchronize_session = False)
+        # Solo actualiza los campos que se han proporcionado
+        
+        # producto_dict = data.dict()
+        # producto_dict['id'] = id
+
+        producto.update(update_data, synchronize_session = False)
         self.db.commit()
         return
+    
+    # def update( self, **kwargs ):
+    # for key, value in kwargs.items():
+    #     if hasattr(self, key):
+    #         setattr(self, key, value)
     
     def delete_producto(self, id:int):
         producto = self.db.query(ProductoModel).filter(ProductoModel.id == id).first()
